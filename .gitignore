@@ -1,1 +1,7 @@
 /vendor/
+.exe
+.bat
+/.idea/
+.config
+.travis.yaml
+
