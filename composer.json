@@ -13,5 +13,13 @@
             "name": "Ayim Domnic",
             "email": "me@ayimdomnic.com"
         }
-    ]
+    ],
+    "autoload":{
+        "psr-4":{
+            "Ayim\\Generator\\":"src/"
+        },
+        "files":[
+            "src/helpers.php"
+        ]
+    }
 }
