@@ -10,7 +10,7 @@ return [
     
     'path' =>[
         
-        'migration'         =>base_path('database/migrations'),
+        'migration'         => base_path('database/migrations'),
         'model'             => app_path('Models/'),
         'datatables'        => app_path('DataTables/'),
         'repository'        => app_path('Repositories/'),
