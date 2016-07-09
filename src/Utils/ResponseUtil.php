@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Ayim\Generator\Utils;
 
 class ResponseUtil
@@ -11,7 +10,6 @@ class ResponseUtil
      *
      * @return array
      */
-    
     public static function makeResponse($message, $data)
     {
         return [
@@ -20,8 +18,7 @@ class ResponseUtil
             'message' => $message,
         ];
     }
-    
-    
+
     /**
      * @param string $message
      * @param array  $data
@@ -37,6 +34,7 @@ class ResponseUtil
         if (!empty($data)) {
             $res['data'] = $data;
         }
+
         return $res;
     }
 }

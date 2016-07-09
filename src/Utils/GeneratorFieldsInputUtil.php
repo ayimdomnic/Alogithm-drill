@@ -3,7 +3,6 @@
 namespace Ayim\Generator\Utils;
 
 use Illuminate\Support\Str;
-
 use RuntimeException;
 
 class GeneratorFieldsInputUtil
@@ -11,37 +10,36 @@ class GeneratorFieldsInputUtil
     public static function validateFieldsFile($fields)
     {
         $fieldsArr = [];
-        
+
         foreach ($fields as $field) {
-            
             if (!self::validateFieldInput($field['fieldInput'])) {
                 throw new RuntimeException('Invalid Input '.$field['fieldInput']);
             }
-            
+
             if (isset($field['htmlType'])) {
                 $htmlType = $field['htmlType'];
             } else {
                 $htmlType = 'text';
             }
-            
+
             if (isset($field['validations'])) {
                 $validations = $field['validations'];
             } else {
                 $validations = '';
             }
-            
+
             if (isset($field['searchable'])) {
                 $searchable = $field['searchable'];
             } else {
                 $searchable = false;
             }
-            
+
             if (isset($field['fillable'])) {
                 $fillable = $field['fillable'];
             } else {
                 $fillable = true;
             }
-            
+
             if (isset($field['primary'])) {
                 $primary = $field['primary'];
             } else {
@@ -54,7 +52,7 @@ class GeneratorFieldsInputUtil
             } else {
                 $inForm = true;
             }
-            
+
             if (isset($field['inIndex'])) {
                 $inIndex = $field['inIndex'];
             } elseif ($primary) {
@@ -71,18 +69,20 @@ class GeneratorFieldsInputUtil
             ];
             $fieldsArr[] = self::processFieldInput($field['fieldInput'], $htmlType, $validations, $fieldSettings);
         }
+
         return $fieldsArr;
     }
-    
+
     public static function validateFieldInput($fieldInputStr)
     {
         $fieldInputs = explode(':', $fieldInputStr);
         if (count($fieldInputs) < 2) {
             return false;
         }
+
         return true;
     }
-    
+
     public static function processFieldInput($fieldInput, $htmlType, $validations, $fieldSettings = [])
     {
         $fieldInputs = explode(':', $fieldInput);
@@ -94,7 +94,7 @@ class GeneratorFieldsInputUtil
         if (count($htmlTypeInputs) > 0) {
             $htmlTypeInputs = array_shift($htmlTypeInputs);
         }
-        
+
         return [
             'fieldInput'     => $fieldInput,
             'fieldTitle'     => Str::title(str_replace('_', ' ', $fieldName)),
@@ -111,7 +111,7 @@ class GeneratorFieldsInputUtil
             'inIndex'        => isset($fieldSettings['inIndex']) ? $fieldSettings['inIndex'] : true,
         ];
     }
-    
+
     public static function prepareKeyValueArrayStr($arr)
     {
         $arrStr = '[';
@@ -120,9 +120,10 @@ class GeneratorFieldsInputUtil
         }
         $arrStr = substr($arrStr, 0, strlen($arrStr) - 2);
         $arrStr .= ']';
+
         return $arrStr;
     }
-    
+
     public static function prepareValuesArrayStr($arr)
     {
         $arrStr = '[';
@@ -131,6 +132,7 @@ class GeneratorFieldsInputUtil
         }
         $arrStr = substr($arrStr, 0, strlen($arrStr) - 2);
         $arrStr .= ']';
+
         return $arrStr;
     }
 }
