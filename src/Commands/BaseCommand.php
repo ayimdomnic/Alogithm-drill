@@ -2,7 +2,6 @@
 
 namespace Ayim\Generator\Commands;
 
-use Illuminate\Console\Command;
 use Ayim\Generator\Common\CommandData;
 use Ayim\Generator\Generators\API\APIControllerGenerator;
 use Ayim\Generator\Generators\API\APIRequestGenerator;
@@ -19,31 +18,31 @@ use Ayim\Generator\Generators\Scaffold\RoutesGenerator;
 use Ayim\Generator\Generators\Scaffold\ViewGenerator;
 use Ayim\Generator\Generators\TestTraitGenerator;
 use Ayim\Generator\Utils\FileUtil;
+use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 class BaseCommand extends command
 {
     public $commandData;
-    
+
     public $composer;
-    
+
     public function __construct()
     {
         parent::__construct();
-        
+
         $this->composer = app()['composer'];
     }
-    
+
     public function handle()
     {
         $this->commandData->modelName = $this->argument('model');
-        
+
         $this->commandData->initCommandData();
         $this->commandData->getInputFields();
     }
 
-    
     public function generateCommonItems()
     {
         if (!$this->commandData->getOption('fromTable') and !$this->isSkip('migration')) {
@@ -59,67 +58,58 @@ class BaseCommand extends command
             $repositoryGenerator->generate();
         }
     }
-    
-    
+
     public function generateAPIItems()
     {
         if (!$this->isSkip('requests') and !$this->isSkip('api_requests')) {
-            
             $requestGenerator = new APIRequestGenerator($this->commandData);
             $requestGenerator->generate();
         }
         if (!$this->isSkip('controllers') and !$this->isSkip('api_controller')) {
-            
             $controllerGenerator = new APIControllerGenerator($this->commandData);
             $controllerGenerator->generate();
         }
         if (!$this->isSkip('routes') and !$this->isSkip('api_routes')) {
-            
             $routesGenerator = new APIRoutesGenerator($this->commandData);
             $routesGenerator->generate();
         }
         if (!$this->isSkip('tests') and $this->commandData->getAddOn('tests')) {
-            
             $repositoryTestGenerator = new RepositoryTestGenerator($this->commandData);
             $repositoryTestGenerator->generate();
-            
+
             $testTraitGenerator = new TestTraitGenerator($this->commandData);
             $testTraitGenerator->generate();
-            
+
             $apiTestGenerator = new APITestGenerator($this->commandData);
             $apiTestGenerator->generate();
         }
     }
-    
+
     public function generateScaffoldItems()
     {
         if (!$this->isSkip('requests') and !$this->isSkip('scaffold_requests')) {
-            
             $requestGenerator = new RequestGenerator($this->commandData);
             $requestGenerator->generate();
         }
-        
+
         if (!$this->isSkip('controllers') and !$this->isSkip('scaffold_controller')) {
-            
             $controllerGenerator = new ControllerGenerator($this->commandData);
             $controllerGenerator->generate();
         }
         if (!$this->isSkip('views')) {
-            
             $viewGenerator = new ViewGenerator($this->commandData);
             $viewGenerator->generate();
         }
         if (!$this->isSkip('routes') and !$this->isSkip('scaffold_routes')) {
-            
             $routeGenerator = new RoutesGenerator($this->commandData);
             $routeGenerator->generate();
         }
         if (!$this->isSkip('menu') and $this->commandData->config->getAddOn('menu.enabled')) {
-            
             $menuGenerator = new MenuGenerator($this->commandData);
             $menuGenerator->generate();
         }
     }
+
     public function performPostActions($runMigration = false)
     {
         if ($this->commandData->getOption('save')) {
@@ -139,25 +129,25 @@ class BaseCommand extends command
             $this->composer->dumpOptimized();
         }
     }
-    
+
     public function isSkip($skip)
     {
         if ($this->commandData->getOption('skip')) {
             return in_array($skip, (array) $this->commandData->getOption('skip'));
         }
+
         return false;
     }
-    
+
     public function performPostActionsWithMigration()
     {
         $this->performPostActions(true);
     }
-    
-    
+
     private function saveSchemaFile()
     {
         $fileFields = [];
-        
+
         foreach ($this->commandData->inputFields as $field) {
             $fileFields[] = [
                 'fieldInput'  => $field['fieldInput'],
@@ -170,19 +160,19 @@ class BaseCommand extends command
                 'inIndex'     => $field['inIndex'],
             ];
         }
-        
+
         $path = config('ayim.ayim_generator.path.schema_files', base_path('resources/model_schemas/'));
         $fileName = $this->commandData->modelName.'.json';
-        
+
         if (file_exists($path.$fileName) && !$this->confirmOverwrite($fileName)) {
             return;
         }
         FileUtil::createFile($path, $fileName, json_encode($fileFields, JSON_PRETTY_PRINT));
-        
+
         $this->commandData->commandComment("\nSchema File saved: ");
         $this->commandData->commandInfo($fileName);
     }
-    
+
     /**
      * @param $fileName
      * @param string $prompt
@@ -194,8 +184,10 @@ class BaseCommand extends command
         $prompt = (empty($prompt))
             ? $fileName.' already exists. Do you want to overwrite it? [y|N]'
             : $prompt;
+
         return $this->confirm($prompt, false);
     }
+
     /**
      * Get the console command options.
      *
@@ -217,6 +209,7 @@ class BaseCommand extends command
             ['views', null, InputOption::VALUE_REQUIRED, 'Specify only the views you want generated: index,create,edit,show'],
         ];
     }
+
     /**
      * Get the console command arguments.
      *
