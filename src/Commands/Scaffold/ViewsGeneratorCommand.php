@@ -14,14 +14,14 @@ class ViewsGeneratorCommand extends BaseCommand
      * @var string
      */
     protected $name = 'ayim.scaffold:views';
-    
+
     /**
      * The console command description.
      *
      * @var string
      */
     protected $description = 'Create views file command';
-    
+
     /**
      * Create a new command instance.
      */
@@ -30,7 +30,7 @@ class ViewsGeneratorCommand extends BaseCommand
         parent::__construct();
         $this->commandData = new CommandData($this, CommandData::$COMMAND_TYPE_SCAFFOLD);
     }
-    
+
     /**
      * Execute the command.
      *
@@ -43,7 +43,7 @@ class ViewsGeneratorCommand extends BaseCommand
         $viewGenerator->generate();
         $this->performPostActions();
     }
-    
+
     /**
      * Get the console command options.
      *
@@ -53,7 +53,7 @@ class ViewsGeneratorCommand extends BaseCommand
     {
         return array_merge(parent::getOptions(), []);
     }
-    
+
     /**
      * Get the console command arguments.
      *

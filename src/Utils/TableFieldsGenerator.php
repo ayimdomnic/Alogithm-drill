@@ -3,26 +3,27 @@
 namespace Ayim\Generator\Utils;
 
 use DB;
+
 class TableFieldsGenerator
 {
     public static function generateFieldsFromTable($tableName)
     {
         $schema = DB::getDoctrineSchemaManager();
-        
+
         $platform = $schema->getDatabasePlatform();
-        
+
         $platform->registerDoctrineTypeMapping('enum', 'string');
-        
+
         $columns = $schema->listTableColumns($tableName);
-        
+
         $primaryKey = static::getPrimaryKeyFromTable($tableName);
-        
+
         $timestamps = static::getTimestampFieldNames();
-        
+
         $defaultSearchable = config('ayim.ayim_generator.options.tables_searchable_default', false);
-        
+
         $fields = [];
-        
+
         foreach ($columns as $column) {
             switch ($column->getType()->getName()) {
                 case 'integer':
@@ -77,13 +78,13 @@ class TableFieldsGenerator
                     $fieldInput = self::generateTextInput($column);
                     $type = 'text';
             }
-            
+
             if (strtolower($column->getName()) == 'password') {
                 $type = 'password';
             } elseif (strtolower($column->getName()) == 'email') {
                 $type = 'email';
             }
-            
+
             if (!empty($fieldInput)) {
                 $field = GeneratorFieldsInputUtil::processFieldInput(
                     $fieldInput,
@@ -92,7 +93,7 @@ class TableFieldsGenerator
                     ['searchable' => $defaultSearchable]
                 );
                 $columnName = $column->getName();
-                
+
                 if ($columnName === $primaryKey) {
                     $field['primary'] = true;
                     $field['inFrom'] = false;
@@ -108,9 +109,10 @@ class TableFieldsGenerator
                 $fields[] = $field;
             }
         }
+
         return $fields;
     }
-    
+
     /**
      * @param string $tableName
      *
@@ -123,9 +125,10 @@ class TableFieldsGenerator
         $primaryKey = $indexes->first(function ($i, $index) {
             return $index->isPrimary() && 1 === count($index->getColumns());
         });
+
         return !empty($primaryKey) ? $primaryKey->getColumns()[0] : null;
     }
-    
+
     /**
      * @return array the set of [created_at column name, updated_at column name]
      */
@@ -134,14 +137,14 @@ class TableFieldsGenerator
         if (!config('ayim.ayim_generator.timestamps.enabled', true)) {
             return [];
         }
-        
+
         $createdAtName = config('ayim.ayim_generator.timestamps.created_at', 'created_at');
-        
+
         $updatedAtName = config('ayim.ayim_generator.timestamps.updated_at', 'updated_at');
-        
+
         return [$createdAtName, $updatedAtName];
     }
-    
+
     /**
      * @param string                       $name
      * @param string                       $type
@@ -158,16 +161,17 @@ class TableFieldsGenerator
         if ($column->getUnsigned()) {
             $fieldInput .= ',true';
         }
+
         return $fieldInput;
     }
-    
-    
+
     private static function generateSingleFieldInput($name, $type)
     {
         $fieldInput = "$name:$type";
+
         return $fieldInput;
     }
-    
+
     /**
      * @param \Doctrine\DBAL\Schema\Column $column
      *
@@ -176,9 +180,10 @@ class TableFieldsGenerator
     private static function generateDecimalInput($column)
     {
         $fieldInput = $column->getName().':decimal,'.$column->getPrecision().','.$column->getScale();
+
         return $fieldInput;
     }
-    
+
     /**
      * @param \Doctrine\DBAL\Schema\Column $column
      *
@@ -187,9 +192,10 @@ class TableFieldsGenerator
     private static function generateFloatInput($column)
     {
         $fieldInput = $column->getName().':float,'.$column->getPrecision().','.$column->getScale();
+
         return $fieldInput;
     }
-    
+
     /**
      * @param \Doctrine\DBAL\Schema\Column $column
      * @param int                          $length
@@ -199,9 +205,10 @@ class TableFieldsGenerator
     private static function generateStringInput($column, $length = 255)
     {
         $fieldInput = $column->getName().':string,'.$length;
+
         return $fieldInput;
     }
-    
+
     /**
      * @param \Doctrine\DBAL\Schema\Column $column
      *
@@ -210,6 +217,7 @@ class TableFieldsGenerator
     private static function generateTextInput($column)
     {
         $fieldInput = $column->getName().':text';
+
         return $fieldInput;
     }
 }

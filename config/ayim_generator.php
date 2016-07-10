@@ -7,9 +7,9 @@ return [
     |----------------------------------------------------
     |
     */
-    
-    'path' =>[
-        
+
+    'path' => [
+
         'migration'         => base_path('database/migrations'),
         'model'             => app_path('Models/'),
         'datatables'        => app_path('DataTables/'),
@@ -26,12 +26,12 @@ return [
         'views'             => base_path('resources/views/'),
         'schema_files'      => base_path('resources/model_schemas/'),
         'templates_dir'     => base_path('resources/ayim/ayim-generator-templates/'),
-        'modelJs'           => base_path('resources/assets/js/models/')
+        'modelJs'           => base_path('resources/assets/js/models/'),
     ],
-    
-    #namespaces
-    
-    'namespaces'=>[
+
+    //namespaces
+
+    'namespaces' => [
         'model'             => 'App\Models',
         'datatables'        => 'App\DataTables',
         'repository'        => 'App\Repositories',
@@ -40,7 +40,7 @@ return [
         'request'           => 'App\Http\Requests',
         'api_request'       => 'App\Http\Requests\API',
     ],
-    
+
     /*
     |--------------------------------------------------------------------------
     | Templates
@@ -48,8 +48,8 @@ return [
     |
     */
     'templates'         => 'core-templates',
-    
-    
+
+
     /*
     |--------------------------------------------------------------------------
     | Model extend class
@@ -57,7 +57,7 @@ return [
     |
     */
     'model_extend_class' => 'Eloquent',
-    
+
     /*
     |--------------------------------------------------------------------------
     | API routes prefix & version
@@ -66,16 +66,16 @@ return [
     */
     'api_prefix'  => 'api',
     'api_version' => 'v1',
-    
+
     /*
     |--------------------------------------------------------------------------
     | Options
     |--------------------------------------------------------------------------
     |
     */
-    
+
     'options' => [
-        'softDelete' => true,
+        'softDelete'                => true,
         'tables_searchable_default' => false,
     ],
     /*
@@ -85,12 +85,12 @@ return [
     |
     */
     'prefixes' => [
-        'route' => '',  // using admin will create route('admin.?.index') type routes
-        'path' => '',
-        'view' => '',  // using backend will create return view('backend.?.index') type the backend views directory
+        'route'  => '',  // using admin will create route('admin.?.index') type routes
+        'path'   => '',
+        'view'   => '',  // using backend will create return view('backend.?.index') type the backend views directory
         'public' => '',
     ],
-    
+
     /*
     |--------------------------------------------------------------------------
     | Add-Ons
@@ -106,7 +106,7 @@ return [
             'menu_file'     => 'layouts/menu.blade.php',
         ],
     ],
-    
+
     /*
     |--------------------------------------------------------------------------
     | Timestamp Fields
